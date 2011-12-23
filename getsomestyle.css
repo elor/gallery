@@ -1,0 +1,24 @@
+.container {
+  margin-right: 16em;
+}
+
+.item {
+  width: 10em;
+  height: 5em;
+  float: left;
+  background-color: gray;
+  margin: 0.5em;
+}
+
+#menu {
+  width: 15em;
+  height: 35em;
+  background-color: green;
+  margin: 0.5em;
+  float: right;
+}
+
+#foot {
+  clear: both;
+}
+
