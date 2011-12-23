@@ -8,7 +8,19 @@
 </head>
 
 <body>
-<div id="menu"></div>
+<div id="menu">
+  <?php
+  if ($handle = opendir('.')) {
+    while ( !!($entry = readdir($handle) )) {
+      if (is_dir($entry) && $entry !== '..' && $entry !== '.') {
+        echo "$entry\n";
+      }
+    }
+    closedir($handle);
+  }
+  ?>
+</div>
+
 <div class="container">
   <div class="item"></div>
   <div class="item"></div>
