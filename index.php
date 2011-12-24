@@ -58,6 +58,7 @@
         if (is_file("$gallery/$entry")) {
           if (!file_exists("thumbs/$gallery/$entry")) {
             createthumb("$gallery/$entry");
+            echo " "; // keepalive?
           }
 
           if (file_exists("thumbs/$gallery/$entry")) {
@@ -71,6 +72,8 @@
       foreach ($list as $val) {
         echo "<a href=\"http://www.5engine.de/$gallery/$val\"><img src=\"thumbs/$gallery/$val\" alt=\"$val\" class=\"item\"/></a>";
       }
+
+    closedir($handle);
 
     } else {
       echo "gallery doesn't exist.";
