@@ -7,19 +7,32 @@
 <link rel="stylesheet" href="getsomestyle.css" />
 </head>
 
+<?php
+  ini_set('display_errors', 0);
+?>
+
 <body>
 <div id="menu">
+<a href="http://5engine.de/">Home</a><br />
 <?php
 // Whatever you can see in this file is a cheap hack. I haven't worked with PHP
 // for years, so if you're shaking your head while reading every single line,
 // keep in mind that I don't care as long as it works.
 
   if (($handle = opendir('.'))) {
+    $list = array();
     while ( !!($entry = readdir($handle) )) {
-      if (is_dir($entry) && $entry !== '..' && $entry !== '.') {
-        echo "<a href=\"http://www.5engine.de/?g=$entry\">$entry</a><br />";
+      if (is_dir($entry) && $entry !== '..' && $entry !== '.' && $entry !== 'thumbs') {
+        $list[] = $entry;
       }
     }
+    
+    sort($list);
+
+    foreach ($list as $val) {
+      echo "<a href=\"http://www.5engine.de/?g=$val\">$val</a><br />";
+    }
+    
     closedir($handle);
   }
 
@@ -27,15 +40,33 @@
 </div>
 
 <?php
+  include 'thumb.php';
+
   if (($gallery = $_GET['g'])) {
     if (($handle = opendir($gallery))) {
       echo "<div class=\"container\">\n";
       echo "<h2>$gallery</h2>";
 
+      $list = array();
+
       while ( !!($entry = readdir($handle) )) {
         if (is_file("$gallery/$entry")) {
-          echo "<div class=\"item\"><a href=\"http://www.5engine.de/$gallery/$entry\">$entry</a></div>";
+          if (!file_exists("thumbs/$gallery/$entry")) {
+            mkdir("thumbs");
+            mkdir("thumbs/$gallery");
+            createthumb("$gallery/$entry");
+          }
+
+          if (file_exists("thumbs/$gallery/$entry")) {
+            $list[] = $entry;
+          }
         }
+      }
+
+      sort($list);
+
+      foreach ($list as $val) {
+        echo "<a href=\"http://www.5engine.de/$gallery/$val\"><img src=\"thumbs/$gallery/$val\" alt=\"$val\" class=\"item\"/></a>";
       }
 
       echo "</div>";

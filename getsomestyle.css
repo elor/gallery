@@ -1,17 +1,22 @@
 .container {
-  margin-right: 16em;
+  margin-right: 11em;
 }
 
 .item {
-  width: 10em;
-  height: 5em;
+  height: 10em;
   float: left;
   background-color: gray;
   margin: 0.5em;
 }
 
+.item img {
+  margin: auto;
+  max-width: 9em;
+  max-height: 9em;
+}
+
 #menu {
-  width: 15em;
+  width: 10em;
   height: 35em;
   margin: 0.5em;
   float: right;
