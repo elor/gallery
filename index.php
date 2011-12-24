@@ -14,6 +14,7 @@
 <body>
 <div id="menu">
 <a href="http://5engine.de/">Home</a><br />
+<h4>Galerien</h4>
 <?php
 // Whatever you can see in this file is a cheap hack. I haven't worked with PHP
 // for years, so if you're shaking your head while reading every single line,
