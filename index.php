@@ -39,21 +39,23 @@
 ?>
 </div>
 
+<div id="container">
+
 <?php
   include 'thumb.php';
 
   if (($gallery = $_GET['g'])) {
     if (($handle = opendir($gallery))) {
-      echo "<div class=\"container\">\n";
       echo "<h2>$gallery</h2>";
 
       $list = array();
 
+      mkdir("thumbs");
+      mkdir("thumbs/$gallery");
+      
       while ( !!($entry = readdir($handle) )) {
         if (is_file("$gallery/$entry")) {
           if (!file_exists("thumbs/$gallery/$entry")) {
-            mkdir("thumbs");
-            mkdir("thumbs/$gallery");
             createthumb("$gallery/$entry");
           }
 
@@ -69,7 +71,6 @@
         echo "<a href=\"http://www.5engine.de/$gallery/$val\"><img src=\"thumbs/$gallery/$val\" alt=\"$val\" class=\"item\"/></a>";
       }
 
-      echo "</div>";
     } else {
       echo "gallery doesn't exist.";
     }
@@ -77,6 +78,10 @@
     echo "Please select a gallery from the menu to your right.";
   }
 ?>
+
+</div>
+
+</body>
 
 </html>
 

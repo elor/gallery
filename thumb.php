@@ -32,7 +32,6 @@ function createthumb($image)
 	imagecopyresized($tmp_img, $img, 0, 0, 0, 0, $thumb_width, $thumb_height, $width, $height);
 
 	// Thumbnail abspeichern
-  mkdir("thumbs");
 	imagejpeg($tmp_img, "thumbs/$image");
 }
 
