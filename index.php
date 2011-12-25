@@ -14,7 +14,7 @@
 <body>
 <div id="menu">
 <a href="http://5engine.de/">Home</a><br />
-<h4>Galerien</h4>
+<hr>
 <?php
 // Whatever you can see in this file is a cheap hack. I haven't worked with PHP
 // for years, so if you're shaking your head while reading every single line,
@@ -23,7 +23,7 @@
   if (($handle = opendir('.'))) {
     $list = array();
     while ( !!($entry = readdir($handle) )) {
-      if (is_dir($entry) && $entry !== '..' && $entry !== '.' && $entry !== 'thumbs') {
+      if (is_dir($entry) && $entry[0] !== '.' && $entry !== "thumbs") {
         $list[] = $entry;
       }
     }
@@ -83,6 +83,7 @@
   }
 ?>
 
+<br class="clear" />
 </div>
 
 </body>
