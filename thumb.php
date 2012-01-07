@@ -8,28 +8,23 @@ function createthumb($image)
 	$height = imagesy($img);
 
   // scale down
-  $size = 300;
+  $thumb_width=300;
+  $thumb_height=200;
 
-/*
-  $factor=1.0;
+  $factor = max($thumb_width / $width, $thumb_height / $height);
 
-  if ($width <= $size && $height <= $size) {
-    // just copy the picture
-    // -> do nothing
-  } else {
-    $factor = $size / max($width, $height);
-  }
-*/
-  $factor = min($size / $height, 1.0);
+  $cull_width = $thumb_width / $factor;
+  $cull_height = $thumb_height / $factor;
 
-  $thumb_width = intval($factor * $width);
-  $thumb_height = intval($factor * $height);
+  $off_x = ($width - $cull_width) / 2;
+  $off_y = ($height - $cull_height) / 4;
+//  $off_y = 0;
 
 	// temporäres Image erzeugen
 	$tmp_img = imagecreatetruecolor($thumb_width, $thumb_height);
 
 	// Bereich des alten Bildes in das neue Bild kopieren
-	imagecopyresized($tmp_img, $img, 0, 0, 0, 0, $thumb_width, $thumb_height, $width, $height);
+	imagecopyresized($tmp_img, $img, 0, 0, $off_x, $off_y, $thumb_width, $thumb_height, $cull_width, $cull_height);
 
 	// Thumbnail abspeichern
 	imagejpeg($tmp_img, "thumbs/$image");
