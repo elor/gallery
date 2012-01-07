@@ -8,8 +8,8 @@ function createthumb($image)
 	$height = imagesy($img);
 
   // scale down
-  $thumb_width=300;
-  $thumb_height=200;
+  $thumb_width=420;
+  $thumb_height=280;
 
   $factor = max($thumb_width / $width, $thumb_height / $height);
 

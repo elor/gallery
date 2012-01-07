@@ -13,8 +13,7 @@
 
 <body>
 <div id="menu">
-<a href="http://5engine.de/">Home</a><br />
-<hr>
+
 <?php
 // Whatever you can see in this file is a cheap hack. I haven't worked with PHP
 // for years, so if you're shaking your head while reading every single line,
@@ -30,8 +29,15 @@
     
     sort($list);
 
+    $cur = $_GET["g"];
+
+    $current = (!$cur ? "class=\"current\"" : "");
+
+    echo "<a href=\"http://5engine.de/\" $current>Startseite</a><br>";
+
     foreach ($list as $val) {
-      echo "<a href=\"http://www.5engine.de/?g=$val\">$val</a><br />";
+      $current = ($cur === $val ? "class=\"current\"" : "");
+      echo "<a href=\"http://www.5engine.de/?g=$val\" $current>$val</a>";
     }
     
     closedir($handle);
@@ -47,7 +53,7 @@
 
   if (($gallery = $_GET['g'])) {
     if (($handle = opendir($gallery))) {
-      echo "<h2>$gallery</h2>";
+//      echo "<h2>$gallery</h2>";
 
       $list = array();
 
