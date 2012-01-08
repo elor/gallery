@@ -3,7 +3,12 @@
 
 <head>
 <meta charset="utf-8" />
-<title>Gallery</title>
+<?php
+  $page = $_GET["g"];
+  $page = ($page ? $page : "Startseite");
+  echo "<title>Thomas B&ouml;ttcher Chemnitz - $page</title>";
+?>
+
 <link rel="stylesheet" href="getsomestyle.css" />
 </head>
 
@@ -15,20 +20,24 @@
 // for years, so if you're shaking your head while reading every single line,
 // keep in mind that I don't care as long as it works.
 
+  function replaceSpace($in) {
+    return str_replace(" ", "%20", $in);
+  }
+
+//  echo replaceSpace('abc asdc ');
+
   if ($_GET["p"]) {
 // picture page
 
     $gallery = $_GET["g"];
+    $gallery_esc = replaceSpace($gallery);
     $picture = $_GET["p"];
+    $picture_esc = replaceSpace($picture);
 
     if (($handle = opendir($gallery))) {
-//      echo "<h2>$gallery</h2>";
 
       $list = array();
 
-      mkdir("thumbs");
-      mkdir("thumbs/$gallery");
-      
       while ( !!($entry = readdir($handle) )) {
         if (is_file("$gallery/$entry")) {
           $list[] = $entry;
@@ -46,28 +55,30 @@
       $max = count($list);
 
       if (!$max) {
-        echo "Diese Galerie ist leer.
+        echo "
+        <p>Diese Galerie ist leer.
         <br>
-        <a href=\"/\">Zur Startseite</a>
+        <a href=\"/\"> &gt;&gt; Zur Startseite</a>
+        </p>
         ";
         exit;
       }
 
       echo "
-        <a class=\"go left\" href=\"?g=$gallery\">zur&uuml;ck</a>
+        <a class=\"go left\" href=\"/?g=$gallery_esc\">zur&uuml;ck</a>
       ";
 
       if ($id !== 0) {
-        $tmp = $list[$id - 1];
+        $tmp = replaceSpace($list[$id - 1]);
         echo "
-          <a class=\"go left\" href=\"/?g=$gallery&p=$tmp\">&lt;&lt;</a>
+          <a class=\"go left\" href=\"/?g=$gallery_esc&amp;p=$tmp\">&lt;&lt;</a>
         ";
       }
 
       if ($id !== $max - 1) {
-        $tmp = $list[$id + 1];
+        $tmp = replaceSpace($list[$id + 1]);
         echo "
-          <a class=\"go right\" href=\"/?g=$gallery&p=$tmp\">&gt;&gt;</a>
+          <a class=\"go right\" href=\"/?g=$gallery_esc&amp;p=$tmp\">&gt;&gt;</a>
         ";
       }
 
@@ -77,9 +88,10 @@
       
       echo "<span>";
 
+      $tmp = replaceSpace($list[0]);
       $current = ($id === 0 ? "class=\"current\"" : "");
       echo "
-        <a href=\"/?g=$gallery&p=$list[0]\" $current>1</a>
+        <a href=\"/?g=$gallery_esc&amp;p=$tmp\" $current>1</a>
       ";
 
       if ($id > 3) {
@@ -90,10 +102,10 @@
 //      echo "to: " . min($max - 2, $id + 3) . "\n";
       for ($i = max(2, $id - 1) ; $i < min($max, $id + 4) ; ++$i) {
 //        echo "$i < $id";
-        $tmp = $list[$i - 1];
+        $tmp = replaceSpace($list[$i - 1]);
         $cur = ($i === $id + 1 ? "class=\"current\"" : "");
         echo "
-          <a href=\"/?g=$gallery&p=$tmp\" $cur>$i</a>
+          <a href=\"/?g=$gallery_esc&amp;p=$tmp\" $cur>$i</a>
         ";
       }
 
@@ -103,24 +115,36 @@
       }
 
       
-      $tmp = $list[$max - 1];
+      $tmp = replaceSpace($list[$max - 1]);
       $current = ($id === $max - 1 ? "class=\"current\"" : "");
       echo "
-        <a href=\"/?g=$gallery&p=$tmp\" $current>$max</a>
+        <a href=\"/?g=$gallery_esc&amp;p=$tmp\" $current>$max</a>
       ";
 
       echo "</span></div>";
 
-      echo "
-      <a id=\"piclink\" href=\"/$gallery/$picture\"><img id=\"pic\" src=\"/$gallery/$picture\" />
-      <div id=\"name\">$picture</div>
-      </a>
-      ";
+      if ($exists) {
+        echo "
+        <div id=\"pic\">
+        <a href=\"/$gallery_esc/$picture_esc\"><img src=\"/$gallery_esc/$picture_esc\" alt=\"$picture\" />
+        <div id=\"name\">$picture</div>
+        </a>
+        </div>
+        ";
+      } else {
+        echo "
+        <div id=\"pic\">
+        Das Bild '$picture' existiert nicht innerhalb der Galerie '$gallery'.
+        </div>
+        ";
+      }
 
     } else {
-      echo "Galerie kann nicht gefunden werden.
+      echo "
+      <p>Die Galerie '$gallery' ist nicht verf&uuml;gbar.
       <br>
-      <a href=\"/\">Zur Startseite</a>
+      <a href=\"/\"> &gt;&gt; Zur Startseite</a>
+      </p>
       ";
       exit;
     }
@@ -147,7 +171,8 @@
 
       foreach ($list as $val) {
         $current = ($cur === $val ? "class=\"current\"" : "");
-        echo "<a href=\"/?g=$val\" $current>$val</a>";
+        $val_esc = replaceSpace($val);
+        echo "<a href=\"/?g=$val_esc\" $current>$val</a>";
       }
       
       closedir($handle);
@@ -156,6 +181,8 @@
     echo "</div>";
     if (($gallery=$_GET["g"])) {
 // gallery page
+      $gallery_esc = replaceSpace($gallery);
+
       echo "<div id=\"container\">";
 
       include 'thumb.php';
@@ -183,7 +210,8 @@
         sort($list);
 
         foreach ($list as $val) {
-          echo "<a href=\"/?g=$gallery&p=$val\"><img src=\"thumbs/$gallery/$val\" alt=\"$val\" class=\"item\"/></a>";
+          $val_esc = replaceSpace($val);
+          echo "<a href=\"/?g=$gallery_esc&amp;p=$val_esc\"><img src=\"thumbs/$gallery_esc/$val_esc\" alt=\"$val\" class=\"item\"/></a>";
         }
 
       closedir($handle);
@@ -199,7 +227,7 @@
       echo "
       <div id=\"home\">
       <h2>Thomas B&ouml;ttcher <span>Chemnitz</span></h2>
-      <img src=\"img.jpg\" />
+      <img src=\"img.jpg\" alt=\"Thomas B&ouml;ttcher\" />
       <p>
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       </p>
