@@ -1,9 +1,13 @@
-<pre>
-<?php
-// Whatever you can see in this file is a cheap hack. I haven't worked with PHP
-// for years, so if you're shaking your head while reading every single line,
-// keep in mind that I don't care as long as it works.
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<title>Thumbnail checker</title>
+</head>
 
+<body>
+<p>
+<?php
   if (($handle = opendir('.'))) {
     $list = array();
     while ( !!($entry = readdir($handle) )) {
@@ -14,20 +18,22 @@
     
     sort($list);
 
-    echo "Galerien:\n";
+    echo "Galerien:<br>";
     foreach ($list as $val) {
-      echo " $val\n";
+      $val_html = htmlentities($val);
+      echo " $val_html<br>";
     }
     
     closedir($handle);
   } else {
-    echo "Fehler: Kann lokales Verzeichnis nicht auf Galerien durchsuchen\n";
+    echo "Fehler: Kann lokales Verzeichnis nicht auf Galerien durchsuchen<br>";
   }
 
-  echo "Teste Galerien auf fehlende Thumbnails...\n";
+  echo "<br>Teste Galerien auf fehlende Thumbnails...<br>";
 
   foreach ($list as $gallery) {
-    echo "\nTeste $gallery:\n";
+    $val_html = htmlentities($gallery);
+    echo "<br>Teste $val_html:<br>";
 
     if (($handle = opendir($gallery))) {
       $files = array();
@@ -43,20 +49,24 @@
       sort($files);
 
       foreach ($files as $val) {
-        echo " $val\n";
+        $val_html = htmlentities($val);
+        echo " $val_html<br>";
       }
 
     closedir($handle);
     } else {
-      echo " Fehler: Galerie existiert ploetzlich nicht mehr! Bitte den Verzeichnisbaum manuell ueberpruefen.\n";
+      echo " Fehler: Galerie existiert ploetzlich nicht mehr! Bitte den Verzeichnisbaum manuell ueberpruefen.<br>";
     }
   }
 
-  echo "\nFertig.\n
-  Fehlende Thumbnails werden beim Ansehen einer Galerie automatisch erstellt,\n
-  sofern moeglich. Bisher wird nur .jpg unterstuetzt. Andere Formate koennen\n
-  oftmals nicht umgewandelt werden.\n";
+  echo "<br>Fertig.<br>
+  Fehlende Thumbnails werden beim Ansehen einer Galerie automatisch erstellt,<br>
+  sofern moeglich. Bisher wird nur .jpg unterstuetzt. Andere Formate koennen<br>
+  oftmals nicht umgewandelt werden.<br>";
 
 ?>
-</pre>
+</p>
+</body>
+
+</html>
 
