@@ -118,10 +118,10 @@
       echo "</span></div>";
 
       if ($exists) {
-        $picture_name = preg_replace("/\.jpg$/", "", $picture);
+        $picture_name = htmlspecialchars(preg_replace("/\.jpg$/", "", $picture));
         echo "
         <div id=\"pic\">
-        <a href=\"/$gallery_esc/$picture_esc\"><img src=\"/$gallery_esc/$picture_esc\" alt=\"$picture\" />
+        <a href=\"/$gallery_esc/$picture_esc\"><img src=\"/$gallery_esc/$picture_esc\" alt=\"$picture_name\" />
         <div id=\"name\">$picture_name</div>
         </a>
         </div>
@@ -177,8 +177,9 @@
     if (($gallery=$_GET["g"])) {
 // gallery page
       $gallery_esc = rawurlencode($gallery);
+      $gallery_html = htmlspecialchars($gallery);
 
-      echo "<div id=\"container\">";
+      echo "<div id=\"container\">\n";
 
       include 'thumbs/make.php';
 
@@ -219,17 +220,18 @@
 
         foreach ($list as $val) {
           $val_esc = rawurlencode($val);
-          echo "<a href=\"/?g=$gallery_esc&amp;p=$val_esc\"><img src=\"thumbs/$gallery_esc/$val_esc\" alt=\"$val\" class=\"item\"/></a>";
+          $val_html = htmlspecialchars($val);
+          echo "<a href=\"/?g=$gallery_esc&amp;p=$val_esc\"><img src=\"thumbs/$gallery_esc/$val_esc\" alt=\"$val_html\" class=\"item\"/></a>\n";
         }
 
       closedir($handle);
 
       } else {
-        echo "Galerie existiert nicht.";
+        echo "Galerie existiert nicht.\n";
       }
 
-      echo "<br class=\"clear\" />";
-      echo "</div>";
+      echo "<br class=\"clear\" />\n";
+      echo "</div>\n";
     } else {
  // home/contact page
       echo "

@@ -20,7 +20,7 @@
 
     echo "Galerien:<br>";
     foreach ($list as $val) {
-      $val_html = htmlentities($val);
+      $val_html = htmlspecialchars($val);
       echo " $val_html<br>";
     }
     
@@ -32,7 +32,7 @@
   echo "<br>Teste Galerien auf fehlende Thumbnails...<br>";
 
   foreach ($list as $gallery) {
-    $val_html = htmlentities($gallery);
+    $val_html = htmlspecialchars($gallery);
     echo "<br>Teste $val_html:<br>";
 
     if (($handle = opendir($gallery))) {
@@ -49,7 +49,11 @@
       sort($files);
 
       foreach ($files as $val) {
-        $val_html = htmlentities($val);
+        if ($val === " .jpg" || $val === ".jpg") {
+          rename ("$gallery/$val", "$gallery/restored$val");
+          continue;
+        }
+        $val_html = htmlspecialchars($val);
         echo " $val_html<br>";
       }
 
