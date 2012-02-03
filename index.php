@@ -9,7 +9,8 @@
   $pic = "";
   $query = $_SERVER["QUERY_STRING"];
 
-  $components = explode('/', $query);
+  $components = explode('&', $query);
+  $components = explode('/', $components[0]);
   switch (count($components)) {
     case 0:
       break;
@@ -260,9 +261,16 @@
       echo "
       <div id=\"home\">
       <h2>Thomas B&ouml;ttcher <span>Chemnitz</span></h2>
-      <img src=\"img.jpg\" alt=\"Thomas B&ouml;ttcher\" />
+      <img src=\"Boettch.jpg\" alt=\"Thomas B&ouml;ttcher\" />
       <p>
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Schon als Kind vom Bilder- u. Fotovirus infiziert, hat dieses Medium für mich nichts an Bedeutung und Reiz verloren. Früher mit den verschiedensten manuellen Analogkameras unterwegs, jetzt  digital, wodurch sich völlig neue Möglichkeiten eröffnen. Ständig fasziniert von Lichtstimmungen, Farbkombinationen und spannenden Details, immer bestrebt all diese herrlichen Entdeckungen im Bild fest zu halten. Jedes gute Motiv erzählt seine eigene Geschichte, die sich häufig nur dem aufmerksamen Auge erschließt. Durch eine gezielte Bearbeitung bzw. Entwicklung wird dieses Geheimnis auch für Andere sichtbar.
+      </p>
+      <p>
+      <span class=\"contact\">Kontakt:</span>
+      <span class=\"mail\">
+&#98;&#108;&#97;&#117;&#98;&#97;&#101;&#114;&#54;&#53;<span></span>&#64;&#119;&#101;&#98;&#46;&#100;&#101;
+      </span>
+
       </p>
       </div>
       ";
