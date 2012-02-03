@@ -270,14 +270,16 @@ Schon als Kind vom Bilder- u. Fotovirus infiziert, hat dieses Medium für mich n
       <span class=\"mail\">
 &#98;&#108;&#97;&#117;&#98;&#97;&#101;&#114;&#54;&#53;<span></span>&#64;&#119;&#101;&#98;&#46;&#100;&#101;
       </span>
-
       </p>
+<a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/3.0/de/\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"http://i.creativecommons.org/l/by-nc/3.0/de/88x31.png\" /></a><br />This <span xmlns:dct=\"http://purl.org/dc/terms/\" href=\"http://purl.org/dc/dcmitype/StillImage\" rel=\"dct:type\">work</span> by <span xmlns:cc=\"http://creativecommons.org/ns#\" property=\"cc:attributionName\">Thomas Böttcher</span> is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/3.0/de/\">Creative Commons Attribution-NonCommercial 3.0 Germany License</a>.
       </div>
       ";
     }
   }
 
 ?>
+
+<a id="license" rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/de/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/3.0/de/88x31.png" /></a>
 
 </body>
 

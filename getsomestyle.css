@@ -181,3 +181,9 @@ a {
 #home .mail {
 }
 
+#license {
+  position: fixed;
+  bottom: 0.5em;
+  left: 0.5em;
+  clear: both;
+}
