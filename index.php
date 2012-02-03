@@ -4,9 +4,32 @@
 <head>
 <meta charset="utf-8" />
 <?php
-  $page = $_GET["g"];
-  $page = ($page ? $page : "Startseite");
-  echo "<title>Thomas B&ouml;ttcher Chemnitz - $page</title>";
+// Extract gallery and pic names from query string
+  $page = "";
+  $pic = "";
+  $query = $_SERVER["QUERY_STRING"];
+
+  $components = explode('/', $query);
+  switch (count($components)) {
+    case 0:
+      break;
+    case 2:
+      $pic = rawurldecode($components[1]);
+    default:
+      $page = rawurldecode($components[0]);
+  }
+
+// re-encode the url. sloppy server and stuff...
+  $page_esc = rawurlencode($page);
+  $pic_esc = rawurlencode($pic);
+
+  $page_html = htmlspecialchars($page);
+  $pic_html = htmlspecialchars($pic);
+
+// Extraction done
+
+  $title = ($page ? $page : "Startseite");
+  echo "<title>Thomas B&ouml;ttcher Chemnitz - $title</title>";
 ?>
 
 <link rel="stylesheet" href="getsomestyle.css" />
@@ -20,27 +43,22 @@
 // for years, so if you're shaking your head while reading every single line,
 // keep in mind that I don't care as long as it works.
 
-  if ($_GET["p"]) {
+  if ($pic) {
 // picture page
 
-    $gallery = $_GET["g"];
-    $gallery_esc = rawurlencode($gallery);
-    $picture = $_GET["p"];
-    $picture_esc = rawurlencode($picture);
-
-    if (($handle = opendir($gallery))) {
+    if (($handle = opendir($page))) {
 
       $list = array();
 
       while ( !!($entry = readdir($handle) )) {
-        if (is_file("$gallery/$entry")) {
+        if (is_file("$page/$entry")) {
           $list[] = $entry;
         }
       }
 
       sort($list);
 
-      $id = array_search($picture, $list);
+      $id = array_search($pic, $list);
 
 //      echo "id: $id \n";
       
@@ -59,13 +77,13 @@
       }
 
       echo "
-        <a class=\"go left\" href=\"/?g=$gallery_esc\">zur&uuml;ck</a>
+        <a class=\"go left\" href=\"/?$page_esc\">zur&uuml;ck</a>
       ";
 
       if ($id !== 0) {
         $tmp = rawurlencode($list[$id - 1]);
         echo "
-          <a class=\"go left\" href=\"/?g=$gallery_esc&amp;p=$tmp\">&lt;&lt;</a>
+          <a class=\"go left\" href=\"/?$page_esc/$tmp\">&lt;&lt;</a>
         ";
       } else {
         echo "
@@ -76,7 +94,7 @@
       if ($id !== $max - 1) {
         $tmp = rawurlencode($list[$id + 1]);
         echo "
-          <a class=\"go right\" href=\"/?g=$gallery_esc&amp;p=$tmp\">&gt;&gt;</a>
+          <a class=\"go right\" href=\"/?$page_esc/$tmp\">&gt;&gt;</a>
         ";
       } else {
         echo "
@@ -93,7 +111,7 @@
       $tmp = rawurlencode($list[0]);
       $current = ($id === 0 ? "class=\"current\"" : "");
       echo "
-        <a href=\"/?g=$gallery_esc&amp;p=$tmp\" $current>1</a>
+        <a href=\"/?$page_esc/$tmp\" $current>1</a>
       ";
 
       if ($id > 2) {
@@ -107,7 +125,7 @@
         $tmp = rawurlencode($list[$i - 1]);
         $cur = ($i === $id + 1 ? "class=\"current\"" : "");
         echo "
-          <a href=\"/?g=$gallery_esc&amp;p=$tmp\" $cur>$i</a>
+          <a href=\"/?$page_esc/$tmp\" $cur>$i</a>
         ";
       }
 
@@ -120,17 +138,17 @@
       $tmp = rawurlencode($list[$max - 1]);
       $current = ($id === $max - 1 ? "class=\"current\"" : "");
       echo "
-        <a href=\"/?g=$gallery_esc&amp;p=$tmp\" $current>$max</a>
+        <a href=\"/?$page_esc/$tmp\" $current>$max</a>
       ";
 
       echo "</span></div>";
 
       if ($exists) {
-        $picture_name = htmlspecialchars(preg_replace("/\.jpg$/", "", $picture));
+        $picture_name = htmlspecialchars(preg_replace("/\.jpg$/", "", $pic));
         echo "
         <div id=\"pic\">
-        <a href=\"/$gallery_esc/$picture_esc\">
-        <img src=\"/$gallery_esc/$picture_esc\" alt=\"$picture_name\" />
+        <a href=\"/$page_esc/$pic_esc\">
+        <img src=\"/$page_esc/$pic_esc\" alt=\"$picture_name\" />
         <div id=\"name\">
         $picture_name</div>
         </a>
@@ -139,14 +157,14 @@
       } else {
         echo "
         <div id=\"pic\">
-        Das Bild '$picture' existiert nicht innerhalb der Galerie '$gallery'.
+        Das Bild '$pic' existiert nicht innerhalb der Galerie '$page'.
         </div>
         ";
       }
 
     } else {
       echo "
-      <p>Die Galerie '$gallery' ist nicht verf&uuml;gbar.
+      <p>Die Galerie '$page' ist nicht verf&uuml;gbar.
       <br>
       <a href=\"/\"> &gt;&gt; Zur Startseite</a>
       </p>
@@ -168,32 +186,27 @@
       
       sort($list);
 
-      $cur = $_GET["g"];
-
-      $current = (!$cur ? "class=\"current\"" : "");
+      $current = (!$page ? "class=\"current\"" : "");
 
       echo "<a href=\"/\" $current>Startseite</a><br>";
 
       foreach ($list as $val) {
-        $current = ($cur === $val ? "class=\"current\"" : "");
+        $current = ($page === $val ? "class=\"current\"" : "");
         $val_esc = rawurlencode($val);
-        echo "<a href=\"/?g=$val_esc\" $current>$val</a>";
+        echo "<a href=\"/?$val_esc\" $current>$val</a>";
       }
       
       closedir($handle);
     }
 
     echo "</div>";
-    if (($gallery=$_GET["g"])) {
+    if ($page) {
 // gallery page
-      $gallery_esc = rawurlencode($gallery);
-      $gallery_html = htmlspecialchars($gallery);
-
       echo "<div id=\"container\">\n";
 
       include 'thumbs/make.php';
 
-      if (($handle = opendir($gallery))) {
+      if (($handle = opendir($page))) {
   //      echo "<h2>$gallery</h2>";
 
         $list = array();
@@ -202,25 +215,25 @@
           mkdir("thumbs");
         }
 
-        if (!is_dir("thumbs/$gallery")) {
-          mkdir("thumbs/$gallery");
+        if (!is_dir("thumbs/$page")) {
+          mkdir("thumbs/$page");
         }
 
 // failsafe code for broken names
         if (($newname = $_GET["rename"])) {
           
-          rename($gallery, $newname);
-          echo "'$gallery' renamed to '$newname'";
+          rename($page, $newname);
+          echo "'$page' renamed to '$newname'";
           exit;
         }
         
         while ( !!($entry = readdir($handle) )) {
-          if (is_file("$gallery/$entry")) {
-            if (!file_exists("thumbs/$gallery/$entry")) {
-              createthumb("$gallery/$entry");
+          if (is_file("$page/$entry")) {
+            if (!file_exists("thumbs/$page/$entry")) {
+              createthumb("$page/$entry");
             }
 
-            if (file_exists("thumbs/$gallery/$entry")) {
+            if (file_exists("thumbs/$page/$entry")) {
               $list[] = $entry;
             }
           }
@@ -231,7 +244,7 @@
         foreach ($list as $val) {
           $val_esc = rawurlencode($val);
           $val_html = htmlspecialchars($val);
-          echo "<a href=\"/?g=$gallery_esc&amp;p=$val_esc\"><img src=\"thumbs/$gallery_esc/$val_esc\" alt=\"$val_html\" class=\"item\"/></a>\n";
+          echo "<a href=\"/?$page_esc/$val_esc\"><img src=\"thumbs/$page_esc/$val_esc\" alt=\"$val_html\" class=\"item\"/></a>\n";
         }
 
       closedir($handle);
