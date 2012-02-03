@@ -123,6 +123,10 @@ a {
   background-color: white;
 }
 
+.go.end {
+  opacity: 0;
+}
+
 .left { 
   float: left;
 }
@@ -146,6 +150,7 @@ a {
   color: white;
   text-align: center;
   padding: 0.5em 0em 0.5em 0em;
+  margin-left: 4em;
 }
 
 #name:hover {

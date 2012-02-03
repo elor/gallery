@@ -67,12 +67,20 @@
         echo "
           <a class=\"go left\" href=\"/?g=$gallery_esc&amp;p=$tmp\">&lt;&lt;</a>
         ";
+      } else {
+        echo "
+          <a class=\"go left end\" >&lt;&lt;</a>
+        ";
       }
 
       if ($id !== $max - 1) {
         $tmp = rawurlencode($list[$id + 1]);
         echo "
           <a class=\"go right\" href=\"/?g=$gallery_esc&amp;p=$tmp\">&gt;&gt;</a>
+        ";
+      } else {
+        echo "
+          <a class=\"go right end\" >&gt;&gt;</a>
         ";
       }
 
@@ -88,13 +96,13 @@
         <a href=\"/?g=$gallery_esc&amp;p=$tmp\" $current>1</a>
       ";
 
-      if ($id > 3) {
+      if ($id > 2) {
         echo " ... ";
       }
 
 //      echo "from: " . max(2, $id - 1) . "\n";
 //      echo "to: " . min($max - 2, $id + 3) . "\n";
-      for ($i = max(2, $id - 1) ; $i < min($max, $id + 4) ; ++$i) {
+      for ($i = max(2, $id) ; $i < min($max, $id + 3) ; ++$i) {
 //        echo "$i < $id";
         $tmp = rawurlencode($list[$i - 1]);
         $cur = ($i === $id + 1 ? "class=\"current\"" : "");
@@ -104,7 +112,7 @@
       }
 
       
-      if ($id < $max - 4) {
+      if ($id < $max - 3) {
         echo " ... ";
       }
 
@@ -121,8 +129,10 @@
         $picture_name = htmlspecialchars(preg_replace("/\.jpg$/", "", $picture));
         echo "
         <div id=\"pic\">
-        <a href=\"/$gallery_esc/$picture_esc\"><img src=\"/$gallery_esc/$picture_esc\" alt=\"$picture_name\" />
-        <div id=\"name\">$picture_name</div>
+        <a href=\"/$gallery_esc/$picture_esc\">
+        <img src=\"/$gallery_esc/$picture_esc\" alt=\"$picture_name\" />
+        <div id=\"name\">
+        $picture_name</div>
         </a>
         </div>
         ";
