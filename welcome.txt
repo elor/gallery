@@ -1,0 +1,10 @@
+Welcome to this Gallery page. You've made the first step towards using your gallery. Here are your next steps:
+
+1. Edit welcome.txt to change this text.
+
+2. Edit contact.txt to change your mail address.
+
+3. Upload your face to Boettch.jpg
+
+3. Edit index.php to change your name (Search for Boettch.jpg)
+

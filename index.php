@@ -27,10 +27,16 @@
   $page_html = htmlspecialchars($page);
   $pic_html = htmlspecialchars($pic);
 
+  $page_ansi = iconv('UTF-8', 'ISO-8859-1//IGNORE', $page);
+  $pic_ansi = iconv('UTF-8', 'ISO-8859-1//IGNORE', $pic);
+
+  $page_ansi_esc = rawurlencode($page_ansi);
+  $pic_ansi_esc = rawurlencode($pic_ansi);
+
 // Extraction done
 
   $title = ($page ? $page : "Startseite");
-  echo "<title>Thomas B&ouml;ttcher Chemnitz - $title</title>";
+  echo "<title>Thomas Böttcher Chemnitz - $title</title>";
 ?>
 
 <link rel="stylesheet" href="getsomestyle.css" />
@@ -47,12 +53,12 @@
   if ($pic) {
 // picture page
 
-    if (($handle = opendir($page))) {
+    if (($handle = opendir($page_ansi))) {
 
       $list = array();
 
       while ( !!($entry = readdir($handle) )) {
-        if (is_file("$page/$entry")) {
+        if (is_file("$page_ansi/$entry")) {
           $list[] = $entry;
         }
       }
@@ -78,13 +84,13 @@
       }
 
       echo "
-        <a class=\"go left\" href=\"/?$page_esc\">zur&uuml;ck</a>
+        <a class=\"go left\" href=\"/?$page_esc\">&Uuml;bersicht</a>
       ";
 
       if ($id !== 0) {
         $tmp = rawurlencode($list[$id - 1]);
         echo "
-          <a class=\"go left\" href=\"/?$page_esc/$tmp\">&lt;&lt;</a>
+          <a class=\"go left\" href=\"/?$page_ansi_esc/$tmp\">&lt;&lt;</a>
         ";
       } else {
         echo "
@@ -145,11 +151,12 @@
       echo "</span></div>";
 
       if ($exists) {
-        $picture_name = htmlspecialchars(preg_replace("/\.jpg$/", "", $pic));
+        $pic_utf8 = iconv('ISO-8859-1', 'UTF-8//IGNORE', $pic);
+        $picture_name = htmlspecialchars(preg_replace("/\.jpg$/", "", $pic_utf8));
         echo "
         <div id=\"pic\">
-        <a href=\"/$page_esc/$pic_esc\">
-        <img src=\"/$page_esc/$pic_esc\" alt=\"$picture_name\" />
+        <a href=\"/$page_ansi_esc/$pic_esc\">
+        <img src=\"/$page_ansi_esc/$pic_esc\" alt=\"$picture_name\" />
         <div id=\"name\">
         $picture_name</div>
         </a>
@@ -181,6 +188,7 @@
       $list = array();
       while ( !!($entry = readdir($handle) )) {
         if (is_dir($entry) && $entry[0] !== '.' && $entry !== "thumbs") {
+          $entry = iconv('ISO-8859-1', 'UTF-8//IGNORE', $entry);
           $list[] = $entry;
         }
       }
@@ -207,7 +215,7 @@
 
       include 'thumbs/make.php';
 
-      if (($handle = opendir($page))) {
+      if (($handle = opendir($page_ansi))) {
   //      echo "<h2>$gallery</h2>";
 
         $list = array();
@@ -216,8 +224,8 @@
           mkdir("thumbs");
         }
 
-        if (!is_dir("thumbs/$page")) {
-          mkdir("thumbs/$page");
+        if (!is_dir("thumbs/$page_ansi")) {
+          mkdir("thumbs/$page_ansi");
         }
 
 // failsafe code for broken names
@@ -229,12 +237,12 @@
         }
         
         while ( !!($entry = readdir($handle) )) {
-          if (is_file("$page/$entry")) {
-            if (!file_exists("thumbs/$page/$entry")) {
-              createthumb("$page/$entry");
+          if (is_file("$page_ansi/$entry")) {
+            if (!file_exists("thumbs/$page_ansi/$entry")) {
+              createthumb("$page_ansi/$entry");
             }
 
-            if (file_exists("thumbs/$page/$entry")) {
+            if (file_exists("thumbs/$page_ansi/$entry")) {
               $list[] = $entry;
             }
           }
@@ -243,9 +251,10 @@
         sort($list);
 
         foreach ($list as $val) {
+          $val_utf8 = iconv('ISO-8859-1', 'UTF-8//IGNORE', $val);
           $val_esc = rawurlencode($val);
-          $val_html = htmlspecialchars($val);
-          echo "<a href=\"/?$page_esc/$val_esc\"><img src=\"thumbs/$page_esc/$val_esc\" alt=\"$val_html\" class=\"item\"/></a>\n";
+          $val_html = htmlspecialchars($val_utf8);
+          echo "<a href=\"/?$page_esc/$val_esc\"><img src=\"thumbs/$page_ansi_esc/$val_esc\" alt=\"$val_html\" class=\"item\"/></a>\n";
         }
 
       closedir($handle);
@@ -258,17 +267,21 @@
       echo "</div>\n";
     } else {
  // home/contact page
+
+      $hometext = file_get_contents('welcome.txt');
+      $mailaddress = file_get_contents('contact.txt');
+
       echo "
       <div id=\"home\">
       <h2>Thomas B&ouml;ttcher <span>Chemnitz</span></h2>
       <img src=\"Boettch.jpg\" alt=\"Thomas B&ouml;ttcher\" />
       <p>
-Schon als Kind vom Bilder- u. Fotovirus infiziert, hat dieses Medium für mich nichts an Bedeutung und Reiz verloren. Früher mit den verschiedensten manuellen Analogkameras unterwegs, jetzt  digital, wodurch sich völlig neue Möglichkeiten eröffnen. Ständig fasziniert von Lichtstimmungen, Farbkombinationen und spannenden Details, immer bestrebt all diese herrlichen Entdeckungen im Bild fest zu halten. Jedes gute Motiv erzählt seine eigene Geschichte, die sich häufig nur dem aufmerksamen Auge erschließt. Durch eine gezielte Bearbeitung bzw. Entwicklung wird dieses Geheimnis auch für Andere sichtbar.
+$hometext
       </p>
       <p>
       <span class=\"contact\">Kontakt:</span>
       <span class=\"mail\">
-&#98;&#108;&#97;&#117;&#98;&#97;&#101;&#114;&#54;&#53;<span></span>&#64;&#119;&#101;&#98;&#46;&#100;&#101;
+$mailaddress
       </span>
       </p>
 <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/3.0/de/\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"http://i.creativecommons.org/l/by-nc/3.0/de/88x31.png\" /></a><br />This <span xmlns:dct=\"http://purl.org/dc/terms/\" href=\"http://purl.org/dc/dcmitype/StillImage\" rel=\"dct:type\">work</span> by <span xmlns:cc=\"http://creativecommons.org/ns#\" property=\"cc:attributionName\">Thomas Böttcher</span> is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc/3.0/de/\">Creative Commons Attribution-NonCommercial 3.0 Germany License</a>.

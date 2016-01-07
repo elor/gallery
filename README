@@ -1,2 +1,6 @@
-Simplistic web photo gallery as a christmas present for a friend
+Simplistic web photo gallery as a double christmas present for a friend
+
+Usage: Upload to a PHP server. Connect with web browser.
+
+Maintenance: Connect via FTP and upload folders/images (latin1 encoding, ISO-8859-1)
 

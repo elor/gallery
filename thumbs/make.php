@@ -17,7 +17,7 @@ function createthumb($image)
   $cull_height = $thumb_height / $factor;
 
   $off_x = ($width - $cull_width) / 2;
-  $off_y = ($height - $cull_height) / 4;
+  $off_y = ($height - $cull_height) / 2;
 //  $off_y = 0;
 
 	// temporäres Image erzeugen
